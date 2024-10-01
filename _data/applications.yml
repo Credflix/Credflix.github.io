@@ -1,0 +1,11 @@
+- label: "Apache Tomcat"
+  description: "Default credentials for Apache Tomcat, a popular web server and servlet container."
+
+- label: "Jenkins"
+  description: "Jenkins automation server default credentials, used for building and deploying software."
+
+- label: "WordPress"
+  description: "Default credentials for WordPress content management system."
+
+- label: "phpMyAdmin"
+  description: "phpMyAdmin credentials for managing MySQL databases from a web interface."
