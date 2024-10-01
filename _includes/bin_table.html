@@ -17,12 +17,17 @@
     #bin-search-wrapper {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         margin-bottom: 20px;
         width: 80%;
         max-width: 600px;
     }
     .filter-list {
+        margin: 10px 0;
+        list-style-type: none;
+        padding: 0;
+    }
+    .filter-list h3 {
         margin: 10px 0;
     }
     #bin-search {
@@ -60,9 +65,9 @@
 </style>
 
 <h1>Credflix</h1>
-<p>Credflix is a comprehensive resource for default credentials, designed to assist penetration testers during engagements. This project aggregates default login/password combinations gathered from multiple sources to streamline the process of accessing various devices and applications.</p>
-<p>Find the project at <a href="https://github.com/Ant-ONE/Credflix">Credflix</a>.</p>
-<p>This project was created by <strong>Ant-ONE</strong></p>
+<p style="text-align: center;">Credflix is a comprehensive resource for default credentials, designed to assist penetration testers during engagements. This project aggregates default login/password combinations gathered from multiple sources to streamline the process of accessing various devices and applications.</p>
+<p style="text-align: center;">Find the project at <a href="https://github.com/Ant-ONE/Credflix">Credflix</a>.</p>
+<p style="text-align: center;">This project was created by <strong>Ant-ONE</strong></p>
 
 <div id="bin-search-wrapper">
     <!-- Applications Filter List -->
@@ -105,7 +110,7 @@
     </ul>
 </div>
 
-<div style="margin-top: -20px;">
+<div style="margin-top: -20px; text-align: center;">
     <input id="bin-search" type="text" placeholder="Search among {{ site.data.applications | size | plus: site.data.databases | size | plus: site.data.network | size }} commands: <command> +<filter> ..."/>
 </div>
 
@@ -135,7 +140,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td id="search-message" colspan="2">
+                <td id="search-message" colspan="2" style="text-align: center;">
                     Couldn't find the command you're looking for? 
                     <a href="/contribute/">Contribute</a> your own!
                 </td>
