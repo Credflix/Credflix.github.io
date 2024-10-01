@@ -1,0 +1,11 @@
+- label: "MySQL"
+  description: "Default MySQL database credentials, commonly used for web applications."
+
+- label: "PostgreSQL"
+  description: "Credentials for PostgreSQL, a robust and open-source relational database system."
+
+- label: "Oracle DB"
+  description: "Default credentials for Oracle Database, widely used in enterprise solutions."
+
+- label: "Microsoft SQL Server"
+  description: "SQL Server default credentials, used for managing databases in Windows environments."
