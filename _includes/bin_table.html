@@ -1,155 +1,180 @@
 <style>
-    .selected {
-        color: #ff0000 !important;
-        border-color: #ff0000 !important;
-    }
-</style>
-
-<div id="credflix-search-wrapper">
-    <h3>Network Devices:</h3>
-    <ul id="credflix-search-filters" class="filter-list">
-        {% for network_pair in site.data.network %}
-        {% assign network_id = network_pair[0] %}
-        {% assign network = network_pair[1] %}
-        <li><input type="checkbox" id="{{ network.label }}" name="network_name" onclick='handleChange(this, "{{ network.label }}");'><label id="{{ network.label }}_label" for="{{ network.label }}" data-title="{{ network.description | replace: '\n', ' ' }}">{{ network.label }}</label></li>
-        {% endfor %}
-    </ul>
-
-    <h3>Applications:</h3>
-    <ul id="credflix-search-filters" class="filter-list">
-        {% for application_pair in site.data.applications %}
-        {% assign application_id = application_pair[0] %}
-        {% assign application = application_pair[1] %}
-        <li><input type="checkbox" id="{{ application.label }}" name="application_name" onclick='handleChange(this, "{{ application.label }}");'><label id="{{ application.label }}_label" for="{{ application.label }}" data-title="{{ application.description | replace: '\n', ' ' }}">{{ application.label }}</label></li>
-        {% endfor %}
-    </ul>
-
-    <h3>Databases:</h3>
-    <ul id="credflix-search-filters" class="filter-list">
-        {% for database_pair in site.data.databases %}
-        {% assign database_id = database_pair[0] %}
-        {% assign database = database_pair[1] %}
-        <li><input type="checkbox" id="{{ database.label }}" name="database_name" onclick='handleChange(this, "{{ database.label }}");'><label id="{{ database.label }}_label" for="{{ database.label }}" data-title="{{ database.description | replace: '\n', ' ' }}">{{ database.label }}</label></li>
-        {% endfor %}
-    </ul>
-</div>
-
-<div style="margin-top: -20px;">
-    <input id="credflix-search" type="text" placeholder="Search among {{ site.credflix | size }} credentials: <credential> +<filter> ..."/>
-</div>
-
-<div id="credflix-table-wrapper">
-    <table id="credflix-table">
-        <thead>
-            <tr>
-                <th>Command</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% assign sites = site.credflix | reverse %} 
-            {% for file in sites %}
-            <tr>
-                <td>
-                    <div class="bin-name">
-                        <div style="flex: 0 0 97%">
-                            <a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.command | escape }}</a>
-                        </div>
-                        <div style="flex: 1;">
-                            <a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
-                        </div>
-                    </div>
-                    <p style="margin-top: -12px;">{% include filter_list.html bin=file %}</p>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr><td id="search-message" colspan="2">Couldn't find the credential you're looking for? <a href="/contribute/">Contribute</a> your own!</td></tr>
-        </tfoot>
-    </table>
-</div>
-
-<script>
-    function copyFunction(file_url) {
-        var copyCommand = document.getElementById(file_url);
-        navigator.clipboard.writeText(copyCommand.innerText).then(() => {
-            {% for file in site.credflix %}
-            document.getElementById("{{ file.url }}_img").alt = "Copy";
-            document.getElementById("{{ file.url }}_img").title = "Copy";
-            {% endfor %}
-            document.getElementById(file_url + "_img").alt = "Copied";
-            document.getElementById(file_url + "_img").title = "Copied";
-        }, () => {
-            console.log("copy failed");
-        });
-    }
-
-    function handleChange(checkbox, label) {
-        if (checkbox.checked == true) {
-            document.getElementById(label).className = 'match';
-            document.getElementById(label + "_label").innerText = label + "✓";
-            var slash = window.location.href.lastIndexOf("/");
-            if (window.location.href[slash + 1] == "#") {
-                window.location.href += '+' + label;
-            } else {
-                window.location.href += '#+' + label;
-            }
-        } else {
-            document.getElementById(label).className = "";
-            document.getElementById(label + "_label").innerText = label;
-            label = label.replace(" ", "%20");
-            var new_href = window.location.href.replace("+" + label, "");
-            window.location.href = new_href;
-            if (window.location.hash == "") {
-                document.getElementById("credflix-search").value = "";
-            }
-        }
-    }
-
-    function filter(query) {
-        var queryArray = query.toLowerCase().trim().split(/ *\+/);
-        var commandPattern = queryArray[0];
-        var filterPatterns = queryArray.splice(1);
-
-        // filtering logic for network, applications, and databases
-        // Implement logic similar to the existing filtering method for binaries
-    }
-
-    function applyFilter() {
-        var searchBox = document.getElementById('credflix-search');
-        var query = decodeURIComponent(location.hash.slice(1));
-        filter(query);
-        if (query) {
-            searchBox.value = query;
-        }
-    }
-
-    function setup() {
-        var searchBox = document.getElementById('credflix-search');
-        var credflixTableWrapper = document.getElementById('credflix-table-wrapper');
-        credflixTableWrapper.style.height = credflixTableWrapper.clientHeight + 'px';
-
-        searchBox.addEventListener('input', function () {
-            var query = searchBox.value;
-            history.replaceState(null, null, encodeURI('#' + query));
-            applyFilter();
-        });
-
-        addEventListener('keydown', function (event) {
-            if (event.key.toLowerCase().match(/^[+a-z]$/) &&
-                !(event.ctrlKey || event.altKey || event.metaKey)) {
-                searchBox.focus();
-                searchBox.parentElement.scrollIntoView();
-            } else if (event.key === 'Escape') {
-                location.hash = searchBox.value = '';
-                searchBox.focus();
-                searchBox.parentElement.scrollIntoView();
-            }
-        });
-
-        window.onhashchange = applyFilter;
-        applyFilter();
-    }
-
-    setup();
-</script>
+	.selected {
+		color: #ff0000 !important;
+		border-color: #ff0000 !important;
+	}
+	</style>
+	
+	<div id="bin-search-wrapper">
+	
+		<ul id="bin-search-filters" class="filter-list">
+		<h3>Applications:</h3>
+		{% for app in site.data.applications %}
+		<li>
+			<input type="checkbox" id="{{ app.label }}" name="app_name" onclick='handleChange(this, "{{ app.label }}");'>
+			<label id="{{ app.label }}_label" for="{{ app.label }}" data-title="{{ app.description | replace: '\n', ' ' }}">{{ app.label }}</label>
+		</li>
+		{% endfor %}
+		</ul>
+		
+		<ul id="bin-search-filters" class="filter-list">
+		<h3>Databases:</h3>
+		{% for db in site.data.databases %}
+		<li>
+			<input type="checkbox" id="{{ db.label }}" name="db_name" onclick='handleChange(this, "{{ db.label }}");'>
+			<label id="{{ db.label }}_label" for="{{ db.label }}" data-title="{{ db.description | replace: '\n', ' ' }}">{{ db.label }}</label>
+		</li>
+		{% endfor %}
+		</ul>
+		
+		<ul id="bin-search-filters" class="filter-list">
+		<h3>Network:</h3>
+		{% for net in site.data.network %}
+		<li>
+			<input type="checkbox" id="{{ net.label }}" name="net_name" onclick='handleChange(this, "{{ net.label }}");'>
+			<label id="{{ net.label }}_label" for="{{ net.label }}" data-title="{{ net.description | replace: '\n', ' ' }}">{{ net.label }}</label>
+		</li>
+		{% endfor %}
+		</ul>
+	
+	</div>
+	
+	<div style="margin-top: -20px;">
+	<input id="bin-search" type="text" placeholder="Search among {{ site.credflix | size }} commands: <command> +<filter> ..."/>
+	</div>
+	
+	<div id="bin-table-wrapper">
+		<table id="bin-table">
+			<thead>
+				<tr>
+					<th>Command</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% assign sites = site.credflix | reverse %} 
+				{% for file in sites %}
+				<tr>
+				<td>
+					<div class="bin-name">
+						<div style="flex: 0 0 97%">
+							<a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.command | escape }}</a>
+						</div>
+						<div style="flex: 1;">
+							<a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
+						</div>
+					</div>
+					<p style="margin-top: -12px;">{% include filter_list.html bin=file %}</p>
+				</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td id="search-message" colspan="2">Couldn't find the command you're looking for? <a href="/contribute/">Contribute</a> your own!</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	
+	<script>
+	
+	 function copyFunction(file_url) {
+		 var copyCommand = document.getElementById(file_url);
+	
+		 navigator.clipboard.writeText(copyCommand.innerText).then(() => {
+			 {% for file in site.credflix %}
+			 document.getElementById("{{ file.url }}_img").alt = "Copy";
+			 document.getElementById("{{ file.url }}_img").title = "Copy";
+			 {% endfor %}
+			 document.getElementById(file_url + "_img").alt = "Copied";
+			 document.getElementById(file_url + "_img").title = "Copied";
+		 }, () => {
+			 console.log("copy failed");
+		 });
+	
+	 }
+	
+	 function handleChange(checkbox, label) {
+		 if (checkbox.checked == true) {
+			 document.getElementById(label).className = 'match';
+			 document.getElementById(label + "_label").innerText = label + "✓";
+			 var slash = window.location.href.lastIndexOf("/");
+			 if (window.location.href[slash+1] == "#") {
+				 window.location.href+='+' + label
+			 } else {
+				 window.location.href+='#+' + label
+			 }
+		 } else {
+			 document.getElementById(label).className = "";
+			 document.getElementById(label + "_label").innerText = label;
+			 label = label.replace(" ", "%20");
+			 var new_href = window.location.href.replace("+"+label, "");
+			 window.location.href = new_href;
+			 if (window.location.hash == "") {
+				 document.getElementById("bin-search").value = "";
+			 }
+		 }
+	 }
+	
+	 function filter(query) {
+		 var queryArray = query.toLowerCase().trim().split(/ *\+/);
+		 var binPattern = queryArray[0];
+		 var functionPatterns = queryArray.splice(1);
+	
+		 var noResults = true;
+	
+		 var allApps = document.getElementsByName("app_name");
+		 var allDatabases = document.getElementsByName("db_name");
+		 var allNetworks = document.getElementsByName("net_name");
+		 var allApps_parsed = [];
+		 var allDatabases_parsed = [];
+		 var allNetworks_parsed = [];
+	
+		 allApps.forEach((app) => {
+			 allApps_parsed.push(app.id.toLowerCase());
+		 });
+		 var app_chosen = functionPatterns.filter(element => allApps_parsed.includes(element));
+		 
+		 allDatabases.forEach((db) => {
+			 allDatabases_parsed.push(db.id.toLowerCase());
+		 });
+		 var db_chosen = functionPatterns.filter(element => allDatabases_parsed.includes(element));
+	
+		 allNetworks.forEach((net) => {
+			 allNetworks_parsed.push(net.id.toLowerCase());
+		 });
+		 var net_chosen = functionPatterns.filter(element => allNetworks_parsed.includes(element));
+	
+		 document.querySelectorAll('#bin-table tbody tr').forEach(function (row) {
+			 var show = true;
+	
+			 var binName = row.children[0].firstElementChild.innerText.toLowerCase();
+			 
+			 var functionElems = Array.from(row.children[0].childNodes[2].children);
+		 
+			 if (show) {
+				 functionElems.forEach((item) => {
+					 item.className = '';
+				 });
+			 }
+			 
+			 var found_binName = false;
+			 if (binName.indexOf(binPattern) !== -1 && binPattern.length !== 0) {
+				 found_binName = true;
+			 }
+	
+			 // Add your filter logic for apps, databases, and networks here...
+	
+			 if (!found_binName || !(app_chosen.length || db_chosen.length || net_chosen.length)) {
+				 row.style.display = 'none';
+			 } else {
+				 row.style.display = 'table-row';
+			 }
+		 });
+	 }
+	
+	 document.getElementById('bin-search').addEventListener('input', function () {
+		 filter(this.value);
+	 });
+	</script>
+	
