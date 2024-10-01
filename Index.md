@@ -1,12 +1,14 @@
-## Categories
+---
+layout: page
+title: Credflix
+---
 
-- Firewalls
-- Content Management Systems (CMS)
-- Applications
-- Database Management Systems (DBMS)
-- IoT Devices
-- Operating Systems
-- Networking Equipment
-- Virtualization Platforms
-- Web Servers
-- Cloud Services
+![logo](/assets/logo.png){:.logo}
+
+Credflix is a comprehensive resource for default credentials, designed to assist penetration testers during engagements. This project aggregates default login/password combinations gathered from multiple sources to streamline the process of accessing various devices and applications.
+
+Find the project at [Credflix](https://credflix.github.io).
+
+This project was created by [Your Name](https://twitter.com/YourTwitterHandle).
+
+{% include bin_table.html %}  # Cela inclut une table dynamique si tu choisis de l'ajouter
