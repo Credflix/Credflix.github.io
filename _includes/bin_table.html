@@ -70,9 +70,22 @@
 <p style="text-align: center;">This project was created by <strong>Ant-ONE</strong></p>
 
 <div id="bin-search-wrapper">
-    <!-- Applications Filter List -->
+    <!-- Network Equipment Filter List -->
     <ul id="bin-search-filters" class="filter-list">
-        <h3>Applications:</h3>
+        <h3>Network Equipment:</h3>
+        {% for net in site.data.network %}
+        <li>
+            <input type="checkbox" id="{{ net.label | slugify }}" name="net_name" 
+                   onclick='handleChange(this, "{{ net.label }}");'>
+            <label id="{{ net.label | slugify }}_label" 
+                   for="{{ net.label | slugify }}">{{ net.label }}</label>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Software Applications Filter List -->
+    <ul id="bin-search-filters" class="filter-list">
+        <h3>Software Applications:</h3>
         {% for app in site.data.applications %}
         <li>
             <input type="checkbox" id="{{ app.label | slugify }}" name="app_name" 
@@ -83,28 +96,54 @@
         {% endfor %}
     </ul>
 
-    <!-- Databases Filter List -->
+    <!-- Security Devices Filter List -->
     <ul id="bin-search-filters" class="filter-list">
-        <h3>Databases:</h3>
-        {% for db in site.data.databases %}
+        <h3>Security Devices:</h3>
+        {% for sec in site.data.security %}
         <li>
-            <input type="checkbox" id="{{ db.label | slugify }}" name="database_name" 
-                   onclick='handleChange(this, "{{ db.label }}");'>
-            <label id="{{ db.label | slugify }}_label" 
-                   for="{{ db.label | slugify }}">{{ db.label }}</label>
+            <input type="checkbox" id="{{ sec.label | slugify }}" name="sec_name" 
+                   onclick='handleChange(this, "{{ sec.label }}");'>
+            <label id="{{ sec.label | slugify }}_label" 
+                   for="{{ sec.label | slugify }}">{{ sec.label }}</label>
         </li>
         {% endfor %}
     </ul>
 
-    <!-- Network Filter List -->
+    <!-- IT Infrastructure Filter List -->
     <ul id="bin-search-filters" class="filter-list">
-        <h3>Network:</h3>
-        {% for net in site.data.network %}
+        <h3>IT Infrastructure:</h3>
+        {% for infra in site.data.infrastructure %}
         <li>
-            <input type="checkbox" id="{{ net.label | slugify }}" name="net_name" 
-                   onclick='handleChange(this, "{{ net.label }}");'>
-            <label id="{{ net.label | slugify }}_label" 
-                   for="{{ net.label | slugify }}">{{ net.label }}</label>
+            <input type="checkbox" id="{{ infra.label | slugify }}" name="infra_name" 
+                   onclick='handleChange(this, "{{ infra.label }}");'>
+            <label id="{{ infra.label | slugify }}_label" 
+                   for="{{ infra.label | slugify }}">{{ infra.label }}</label>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- IoT Filter List -->
+    <ul id="bin-search-filters" class="filter-list">
+        <h3>IoT:</h3>
+        {% for iot in site.data.iot %}
+        <li>
+            <input type="checkbox" id="{{ iot.label | slugify }}" name="iot_name" 
+                   onclick='handleChange(this, "{{ iot.label }}");'>
+            <label id="{{ iot.label | slugify }}_label" 
+                   for="{{ iot.label | slugify }}">{{ iot.label }}</label>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Telecommunications & VoIP Filter List -->
+    <ul id="bin-search-filters" class="filter-list">
+        <h3>Telecommunications & VoIP:</h3>
+        {% for tel in site.data.telecom %}
+        <li>
+            <input type="checkbox" id="{{ tel.label | slugify }}" name="tel_name" 
+                   onclick='handleChange(this, "{{ tel.label }}");'>
+            <label id="{{ tel.label | slugify }}_label" 
+                   for="{{ tel.label | slugify }}">{{ tel.label }}</label>
         </li>
         {% endfor %}
     </ul>
@@ -122,7 +161,7 @@
             </tr>
         </thead>
         <tbody>
-            {% assign all_files = site.data.applications | concat: site.data.databases | concat: site.data.network %}
+            {% assign all_files = site.data.applications | concat: site.data.databases | concat: site.data.network | concat: site.data.security | concat: site.data.infrastructure | concat: site.data.iot | concat: site.data.telecom %}
             {% for file in all_files %}
             <tr>
                 <td>
@@ -185,35 +224,5 @@
         var allApps = document.getElementsByName("app_name");
         var allDatabases = document.getElementsByName("database_name");
         var allNetworks = document.getElementsByName("net_name");
-
-        var allApps_parsed = [], allDatabases_parsed = [], allNetworks_parsed = [];
-
-        allApps.forEach((app) => allApps_parsed.push(app.id.toLowerCase()));
-        var app_chosen = functionPatterns.filter(element => allApps_parsed.includes(element));
-
-        allDatabases.forEach((db) => allDatabases_parsed.push(db.id.toLowerCase()));
-        var db_chosen = functionPatterns.filter(element => allDatabases_parsed.includes(element));
-
-        allNetworks.forEach((net) => allNetworks_parsed.push(net.id.toLowerCase()));
-        var net_chosen = functionPatterns.filter(element => allNetworks_parsed.includes(element));
-
-        document.querySelectorAll('#bin-table tbody tr').forEach(function (row) {
-            var show = true;
-            var binName = row.children[0].firstElementChild.innerText.toLowerCase();
-
-            if (binName.indexOf(binPattern) === -1 && binPattern.length !== 0) {
-                show = false;
-            }
-
-            if (!app_chosen.length && !db_chosen.length && !net_chosen.length) {
-                show = false;
-            }
-
-            row.style.display = show ? 'table-row' : 'none';
-        });
-    }
-
-    document.getElementById('bin-search').addEventListener('input', function () {
-        filter(this.value);
-    });
-</script>
+        var allSecurity = document.getElementsByName("sec_name");
+       

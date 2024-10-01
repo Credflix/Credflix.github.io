@@ -1,0 +1,13 @@
+  ---
+  Servers:
+    label: Servers
+    description: Powerful computers that provide data and services to other computers.
+  NAS_SAN_Storage:
+    label: NAS/SAN Storage
+    description: Networked storage solutions for data management.
+  Backup_Devices:
+    label: Backup Devices
+    description: Devices used for data backup and recovery.
+  Virtualization_Consoles:
+    label: Virtualization Consoles
+    description: Tools for managing virtualized environments.

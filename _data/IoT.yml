@@ -1,0 +1,13 @@
+  ---
+  Connected_Cameras:
+    label: Connected Cameras
+    description: IoT devices for video monitoring.
+  IoT_Gateways:
+    label: IoT Gateways
+    description: Devices that connect IoT devices to the cloud.
+  Home_Automation_Systems:
+    label: Home Automation Systems
+    description: Systems that automate home devices.
+  Connected_Cars:
+    label: Connected Cars
+    description: Vehicles equipped with internet connectivity.

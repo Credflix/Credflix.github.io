@@ -1,0 +1,13 @@
+  ---
+  Surveillance_Cameras:
+    label: Surveillance Cameras
+    description: Devices that monitor and record video for security purposes.
+  Digital_Video_Recorders:
+    label: Digital Video Recorders
+    description: Devices that record video footage from surveillance cameras.
+  Access_Controllers:
+    label: Access Controllers
+    description: Devices that control access to secured areas.
+  Alarm_Systems:
+    label: Alarm Systems
+    description: Devices that alert users to unauthorized access.

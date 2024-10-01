@@ -1,0 +1,19 @@
+  ---
+  Routers:
+    label: Routers
+    description: Networking devices that route data between different networks.
+  Switches:
+    label: Switches
+    description: Networking devices that connect devices within a single network.
+  Firewalls:
+    label: Firewalls
+    description: Devices that monitor and control incoming and outgoing network traffic.
+  Wireless_Access_Points:
+    label: Wireless Access Points
+    description: Devices that allow wireless devices to connect to a wired network.
+  Wi-Fi_Controllers:
+    label: Wi-Fi Controllers
+    description: Devices that manage multiple access points.
+  VPN_Appliances:
+    label: VPN Appliances
+    description: Devices that create secure connections over a public network.
