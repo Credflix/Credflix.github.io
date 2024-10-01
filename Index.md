@@ -3,12 +3,11 @@ layout: page
 title: Credflix
 ---
 
-![logo](/assets/logo.png){:.logo}
 
 Credflix is a comprehensive resource for default credentials, designed to assist penetration testers during engagements. This project aggregates default login/password combinations gathered from multiple sources to streamline the process of accessing various devices and applications.
 
 Find the project at [Credflix](https://credflix.github.io).
 
-This project was created by [Your Name](https://twitter.com/YourTwitterHandle).
+This project was created by [Ant-ONE]
 
 {% include bin_table.html %}  # Cela inclut une table dynamique si tu choisis de l'ajouter
