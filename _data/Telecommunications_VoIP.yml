@@ -1,13 +1,12 @@
-  ---
-  IP_Phones:
-    label: IP Phones
-    description: Phones that use VoIP technology.
-  PBX:
-    label: PBX
-    description: Private Branch Exchange for managing telephone calls.
-  VoIP_Gateways:
-    label: VoIP Gateways
-    description: Devices that convert VoIP calls to traditional phone lines.
-  Modems_DSL_Routers:
-    label: Modems & DSL Routers
-    description: Devices that connect homes to the internet.
+IP_Phones:
+  label: IP Phones
+  description: Phones that use VoIP technology.
+PBX:
+  label: PBX
+  description: Private Branch Exchange for managing telephone calls.
+VoIP_Gateways:
+  label: VoIP Gateways
+  description: Devices that convert VoIP calls to traditional phone lines.
+Modems_DSL_Routers:
+  label: Modems & DSL Routers
+  description: Devices that connect homes to the internet.

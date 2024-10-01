@@ -1,16 +1,15 @@
-  ---
-  Content_Management_Systems:
-    label: Content Management Systems
-    description: Software applications used to manage digital content.
-  Database_Management_Systems:
-    label: Database Management Systems
-    description: Software for creating and managing databases.
-  System_Management_Tools:
-    label: System Management Tools
-    description: Tools for monitoring and managing IT systems.
-  ERP_CRM_Solutions:
-    label: ERP/CRM Solutions
-    description: Software for managing business processes and customer relationships.
-  Email_Servers:
-    label: Email Servers
-    description: Servers that send and receive email.
+Content_Management_Systems:
+  label: Content Management Systems
+  description: Software applications used to manage digital content.
+Database_Management_Systems:
+  label: Database Management Systems
+  description: Software for creating and managing databases.
+System_Management_Tools:
+  label: System Management Tools
+  description: Tools for monitoring and managing IT systems.
+ERP_CRM_Solutions:
+  label: ERP/CRM Solutions
+  description: Software for managing business processes and customer relationships.
+Email_Servers:
+  label: Email Servers
+  description: Servers that send and receive email.
