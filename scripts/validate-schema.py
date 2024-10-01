@@ -11,9 +11,9 @@ def parse_yaml(path):
 
 def build_schema():
     # Catégories mises à jour avec toutes les catégories
-    network_names = next(parse_yaml('_data/Networking_Equipment.yml')).keys()
+    network_names = next(parse_yaml('_data/Networking_Equipments.yml')).keys()
     security_names = next(parse_yaml('_data/Security_Devices.yml')).keys()
-    infrastructure_names = next(parse_yaml('_data/IT_Infrastructure.yml')).keys()
+    infrastructure_names = next(parse_yaml('_data/IT_Infrastructures.yml')).keys()
     application_names = next(parse_yaml('_data/Software_Applications.yml')).keys()
     iot_names = next(parse_yaml('_data/IoT.yml')).keys()
     telecom_names = next(parse_yaml('_data/Telecommunications_VoIP.yml')).keys()
