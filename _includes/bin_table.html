@@ -7,40 +7,49 @@
 	
 	<div id="bin-search-wrapper">
 	
+		<!-- Applications Filter List -->
 		<ul id="bin-search-filters" class="filter-list">
-		<h3>Applications:</h3>
-		{% for app in site.data.applications %}
-		<li>
-			<input type="checkbox" id="{{ app.label }}" name="app_name" onclick='handleChange(this, "{{ app.label }}");'>
-			<label id="{{ app.label }}_label" for="{{ app.label }}">{{ app.label }}</label>
-		</li>
-		{% endfor %}
+			<h3>Applications:</h3>
+			{% for app in site.data.applications %}
+			<li>
+				<input type="checkbox" id="{{ app.label | replace: ' ', '-' }}" name="app_name" 
+					   onclick='handleChange(this, "{{ app.label }}");'>
+				<label id="{{ app.label | replace: ' ', '-' }}_label" 
+					   for="{{ app.label | replace: ' ', '-' }}">{{ app.label }}</label>
+			</li>
+			{% endfor %}
 		</ul>
-		
+	
+		<!-- Databases Filter List -->
 		<ul id="bin-search-filters" class="filter-list">
-		<h3>Databases:</h3>
-		{% for db in site.data.databases %}
-		<li>
-			<input type="checkbox" id="{{ db.label }}" name="db_name" onclick='handleChange(this, "{{ db.label }}");'>
-			<label id="{{ db.label }}_label" for="{{ db.label }}">{{ db.label }}</label>
-		</li>
-		{% endfor %}
+			<h3>Databases:</h3>
+			{% for db in site.data.databases %}
+			<li>
+				<input type="checkbox" id="{{ db.label | replace: ' ', '-' }}" name="database_name" 
+					   onclick='handleChange(this, "{{ db.label }}");'>
+				<label id="{{ db.label | replace: ' ', '-' }}_label" 
+					   for="{{ db.label | replace: ' ', '-' }}">{{ db.label }}</label>
+			</li>
+			{% endfor %}
 		</ul>
-		
+	
+		<!-- Network Filter List -->
 		<ul id="bin-search-filters" class="filter-list">
-		<h3>Network:</h3>
-		{% for net in site.data.network %}
-		<li>
-			<input type="checkbox" id="{{ net.label }}" name="net_name" onclick='handleChange(this, "{{ net.label }}");'>
-			<label id="{{ net.label }}_label" for="{{ net.label }}">{{ net.label }}</label>
-		</li>
-		{% endfor %}
+			<h3>Network:</h3>
+			{% for net in site.data.network %}
+			<li>
+				<input type="checkbox" id="{{ net.label | replace: ' ', '-' }}" name="net_name" 
+					   onclick='handleChange(this, "{{ net.label }}");'>
+				<label id="{{ net.label | replace: ' ', '-' }}_label" 
+					   for="{{ net.label | replace: ' ', '-' }}">{{ net.label }}</label>
+			</li>
+			{% endfor %}
 		</ul>
 	
 	</div>
 	
 	<div style="margin-top: -20px;">
-	<input id="bin-search" type="text" placeholder="Search among {{ site.credflix | size }} commands: <command> +<filter> ..."/>
+		<input id="bin-search" type="text" placeholder="Search among {{ site.credflix | size }} commands: <command> +<filter> ..."/>
 	</div>
 	
 	<div id="bin-table-wrapper">
@@ -51,118 +60,107 @@
 				</tr>
 			</thead>
 			<tbody>
-			{% assign sites = site.credflix | reverse %} 
+				{% assign sites = site.credflix | reverse %} 
 				{% for file in sites %}
 				<tr>
-				<td>
-					<div class="bin-name">
-						<div style="flex: 0 0 97%">
-							<a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.command | escape }}</a>
+					<td>
+						<div class="bin-name">
+							<div style="flex: 0 0 97%">
+								<a href="{{ file.url }}" id="{{ file.url }}" 
+								   style="text-decoration: none; color: DarkGreen;">{{ file.command | escape }}</a>
+							</div>
+							<div style="flex: 1;">
+								<a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')">
+									<img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/>
+								</a>
+							</div>
 						</div>
-						<div style="flex: 1;">
-							<a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
-						</div>
-					</div>
-				</td>
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 			<tfoot>
 				<tr>
-					<td id="search-message" colspan="2">Couldn't find the command you're looking for? <a href="/contribute/">Contribute</a> your own!</td>
+					<td id="search-message" colspan="2">
+						Couldn't find the command you're looking for? 
+						<a href="/contribute/">Contribute</a> your own!
+					</td>
 				</tr>
 			</tfoot>
 		</table>
 	</div>
 	
 	<script>
+	function copyFunction(file_url) {
+		var copyCommand = document.getElementById(file_url);
 	
-	 function copyFunction(file_url) {
-		 var copyCommand = document.getElementById(file_url);
+		navigator.clipboard.writeText(copyCommand.innerText).then(() => {
+			{% for file in site.credflix %}
+			document.getElementById("{{ file.url }}_img").alt = "Copy";
+			document.getElementById("{{ file.url }}_img").title = "Copy";
+			{% endfor %}
+			document.getElementById(file_url + "_img").alt = "Copied";
+			document.getElementById(file_url + "_img").title = "Copied";
+		}, () => {
+			console.log("copy failed");
+		});
+	}
 	
-		 navigator.clipboard.writeText(copyCommand.innerText).then(() => {
-			 {% for file in site.credflix %}
-			 document.getElementById("{{ file.url }}_img").alt = "Copy";
-			 document.getElementById("{{ file.url }}_img").title = "Copy";
-			 {% endfor %}
-			 document.getElementById(file_url + "_img").alt = "Copied";
-			 document.getElementById(file_url + "_img").title = "Copied";
-		 }, () => {
-			 console.log("copy failed");
-		 });
+	function handleChange(checkbox, label) {
+		var sanitizedLabel = label.replace(/\s/g, '-');
+		if (checkbox.checked) {
+			document.getElementById(label).className = 'selected';
+			document.getElementById(label + "_label").innerText = label + " ✓";
+			if (window.location.href.includes("#")) {
+				window.location.href += '+' + sanitizedLabel;
+			} else {
+				window.location.href += '#+' + sanitizedLabel;
+			}
+		} else {
+			document.getElementById(label).className = "";
+			document.getElementById(label + "_label").innerText = label;
+			window.location.href = window.location.href.replace("+" + sanitizedLabel, "");
+		}
+	}
 	
-	 }
+	function filter(query) {
+		var queryArray = query.toLowerCase().trim().split(/ *\+/);
+		var binPattern = queryArray[0];
+		var functionPatterns = queryArray.splice(1);
 	
-	 function handleChange(checkbox, label) {
-		 if (checkbox.checked == true) {
-			 document.getElementById(label).className = 'match';
-			 document.getElementById(label + "_label").innerText = label + "✓";
-			 var slash = window.location.href.lastIndexOf("/");
-			 if (window.location.href[slash+1] == "#") {
-				 window.location.href+='+' + label
-			 } else {
-				 window.location.href+='#+' + label
-			 }
-		 } else {
-			 document.getElementById(label).className = "";
-			 document.getElementById(label + "_label").innerText = label;
-			 label = label.replace(" ", "%20");
-			 var new_href = window.location.href.replace("+"+label, "");
-			 window.location.href = new_href;
-			 if (window.location.hash == "") {
-				 document.getElementById("bin-search").value = "";
-			 }
-		 }
-	 }
+		var allApps = document.getElementsByName("app_name");
+		var allDatabases = document.getElementsByName("database_name");
+		var allNetworks = document.getElementsByName("net_name");
 	
-	 function filter(query) {
-		 var queryArray = query.toLowerCase().trim().split(/ *\+/);
-		 var binPattern = queryArray[0];
-		 var functionPatterns = queryArray.splice(1);
+		var allApps_parsed = [], allDatabases_parsed = [], allNetworks_parsed = [];
 	
-		 var noResults = true;
+		allApps.forEach((app) => allApps_parsed.push(app.id.toLowerCase()));
+		var app_chosen = functionPatterns.filter(element => allApps_parsed.includes(element));
 	
-		 var allApps = document.getElementsByName("app_name");
-		 var allDatabases = document.getElementsByName("db_name");
-		 var allNetworks = document.getElementsByName("net_name");
-		 var allApps_parsed = [];
-		 var allDatabases_parsed = [];
-		 var allNetworks_parsed = [];
+		allDatabases.forEach((db) => allDatabases_parsed.push(db.id.toLowerCase()));
+		var db_chosen = functionPatterns.filter(element => allDatabases_parsed.includes(element));
 	
-		 allApps.forEach((app) => {
-			 allApps_parsed.push(app.id.toLowerCase());
-		 });
-		 var app_chosen = functionPatterns.filter(element => allApps_parsed.includes(element));
-		 
-		 allDatabases.forEach((db) => {
-			 allDatabases_parsed.push(db.id.toLowerCase());
-		 });
-		 var db_chosen = functionPatterns.filter(element => allDatabases_parsed.includes(element));
+		allNetworks.forEach((net) => allNetworks_parsed.push(net.id.toLowerCase()));
+		var net_chosen = functionPatterns.filter(element => allNetworks_parsed.includes(element));
 	
-		 allNetworks.forEach((net) => {
-			 allNetworks_parsed.push(net.id.toLowerCase());
-		 });
-		 var net_chosen = functionPatterns.filter(element => allNetworks_parsed.includes(element));
+		document.querySelectorAll('#bin-table tbody tr').forEach(function (row) {
+			var show = true;
+			var binName = row.children[0].firstElementChild.innerText.toLowerCase();
 	
-		 document.querySelectorAll('#bin-table tbody tr').forEach(function (row) {
-			 var show = true;
+			if (binName.indexOf(binPattern) === -1 && binPattern.length !== 0) {
+				show = false;
+			}
 	
-			 var binName = row.children[0].firstElementChild.innerText.toLowerCase();
+			if (!app_chosen.length && !db_chosen.length && !net_chosen.length) {
+				show = false;
+			}
 	
-			 if (binName.indexOf(binPattern) === -1 && binPattern.length !== 0) {
-				 show = false;
-			 }
+			row.style.display = show ? 'table-row' : 'none';
+		});
+	}
 	
-			 if (!app_chosen.length && !db_chosen.length && !net_chosen.length) {
-				 show = false;
-			 }
-	
-			 row.style.display = show ? 'table-row' : 'none';
-		 });
-	 }
-	
-	 document.getElementById('bin-search').addEventListener('input', function () {
-		 filter(this.value);
-	 });
+	document.getElementById('bin-search').addEventListener('input', function () {
+		filter(this.value);
+	});
 	</script>
 	
