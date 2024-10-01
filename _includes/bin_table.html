@@ -1,41 +1,68 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    #bin-search-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        width: 80%;
+        max-width: 600px;
+    }
+    .filter-list {
+        margin: 10px 0;
+    }
+    #bin-search {
+        margin: 10px 0;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+    #bin-table-wrapper {
+        width: 80%;
+        max-width: 600px;
+        margin: 20px 0;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background-color: #f4f4f4;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .selected {
+        color: #ff0000 !important;
+        border-color: #ff0000 !important;
+    }
+</style>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credflix - Default Credentials</title>
-    <style>
-        /* Add your styles here */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #bin-search-wrapper {
-            margin-bottom: 20px;
-        }
-        .filter-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .filter-list h3 {
-            margin: 0;
-            font-size: 1.2em;
-        }
-        #bin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        #bin-table th, #bin-table td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
-</head>
-<body>
-
-<h1>Default Credentials Database</h1>
+<h1>Credflix</h1>
+<p>Credflix is a comprehensive resource for default credentials, designed to assist penetration testers during engagements. This project aggregates default login/password combinations gathered from multiple sources to streamline the process of accessing various devices and applications.</p>
+<p>Find the project at <a href="https://github.com/Ant-ONE/Credflix">Credflix</a>.</p>
+<p>This project was created by <strong>Ant-ONE</strong></p>
 
 <div id="bin-search-wrapper">
     <!-- Applications Filter List -->
@@ -79,70 +106,109 @@
 </div>
 
 <div style="margin-top: -20px;">
-    <input id="bin-search" type="text" 
-           placeholder="Search among {{ site.data.applications | size | plus: site.data.databases | size | plus: site.data.network | size }} commands: <command> +<filter> ..."/>
+    <input id="bin-search" type="text" placeholder="Search among {{ site.data.applications | size | plus: site.data.databases | size | plus: site.data.network | size }} commands: <command> +<filter> ..."/>
 </div>
 
-<table id="bin-table">
-    <thead>
-        <tr>
-            <th>Command</th>
-            <th>Description</th>
-            <th>Type</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in all_files %}
-        <tr>
-            <td><a href="{{ item.link }}">{{ item.command }}</a></td>
-            <td>{{ item.description }}</td>
-            <td>{{ item.type }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div id="bin-table-wrapper">
+    <table id="bin-table">
+        <thead>
+            <tr>
+                <th>Command</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% assign all_files = site.data.applications | concat: site.data.databases | concat: site.data.network %}
+            {% for file in all_files %}
+            <tr>
+                <td>
+                    <div class="bin-name">
+                        <div style="flex: 0 0 97%">
+                            <a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.command | escape }}</a>
+                        </div>
+                        <div style="flex: 1;">
+                            <a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td id="search-message" colspan="2">
+                    Couldn't find the command you're looking for? 
+                    <a href="/contribute/">Contribute</a> your own!
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 
 <script>
-function filter(query) {
-    var queryArray = query.toLowerCase().trim().split(/ *\+/);
-    var binPattern = queryArray[0];
-    var functionPatterns = queryArray.splice(1);
+    function copyFunction(file_url) {
+        var copyCommand = document.getElementById(file_url);
+        navigator.clipboard.writeText(copyCommand.innerText).then(() => {
+            document.getElementById(file_url + "_img").alt = "Copied";
+            document.getElementById(file_url + "_img").title = "Copied";
+        }, () => {
+            console.log("copy failed");
+        });
+    }
 
-    var allApps = document.getElementsByName("app_name");
-    var allDatabases = document.getElementsByName("database_name");
-    var allNetworks = document.getElementsByName("net_name");
-
-    var allApps_parsed = [], allDatabases_parsed = [], allNetworks_parsed = [];
-
-    allApps.forEach((app) => allApps_parsed.push(app.id.toLowerCase()));
-    var app_chosen = functionPatterns.filter(element => allApps_parsed.includes(element));
-
-    allDatabases.forEach((db) => allDatabases_parsed.push(db.id.toLowerCase()));
-    var db_chosen = functionPatterns.filter(element => allDatabases_parsed.includes(element));
-
-    allNetworks.forEach((net) => allNetworks_parsed.push(net.id.toLowerCase()));
-    var net_chosen = functionPatterns.filter(element => allNetworks_parsed.includes(element));
-
-    document.querySelectorAll('#bin-table tbody tr').forEach(function (row) {
-        var show = true;
-        var binName = row.children[0].firstElementChild.innerText.toLowerCase();
-
-        if (binName.indexOf(binPattern) === -1 && binPattern.length !== 0) {
-            show = false;
+    function handleChange(checkbox, label) {
+        var sanitizedLabel = label.replace(/\s/g, '-');
+        if (checkbox.checked) {
+            document.getElementById(sanitizedLabel).className = 'selected';
+            document.getElementById(sanitizedLabel + "_label").innerText = label + " ✓";
+            if (window.location.href.includes("#")) {
+                window.location.href += '+' + sanitizedLabel;
+            } else {
+                window.location.href += '#+' + sanitizedLabel;
+            }
+        } else {
+            document.getElementById(sanitizedLabel).className = "";
+            document.getElementById(sanitizedLabel + "_label").innerText = label;
+            window.location.href = window.location.href.replace("+" + sanitizedLabel, "");
         }
+    }
 
-        if (!app_chosen.length && !db_chosen.length && !net_chosen.length) {
-            show = false;
-        }
+    function filter(query) {
+        var queryArray = query.toLowerCase().trim().split(/ *\+/);
+        var binPattern = queryArray[0];
+        var functionPatterns = queryArray.splice(1);
 
-        row.style.display = show ? 'table-row' : 'none';
+        var allApps = document.getElementsByName("app_name");
+        var allDatabases = document.getElementsByName("database_name");
+        var allNetworks = document.getElementsByName("net_name");
+
+        var allApps_parsed = [], allDatabases_parsed = [], allNetworks_parsed = [];
+
+        allApps.forEach((app) => allApps_parsed.push(app.id.toLowerCase()));
+        var app_chosen = functionPatterns.filter(element => allApps_parsed.includes(element));
+
+        allDatabases.forEach((db) => allDatabases_parsed.push(db.id.toLowerCase()));
+        var db_chosen = functionPatterns.filter(element => allDatabases_parsed.includes(element));
+
+        allNetworks.forEach((net) => allNetworks_parsed.push(net.id.toLowerCase()));
+        var net_chosen = functionPatterns.filter(element => allNetworks_parsed.includes(element));
+
+        document.querySelectorAll('#bin-table tbody tr').forEach(function (row) {
+            var show = true;
+            var binName = row.children[0].firstElementChild.innerText.toLowerCase();
+
+            if (binName.indexOf(binPattern) === -1 && binPattern.length !== 0) {
+                show = false;
+            }
+
+            if (!app_chosen.length && !db_chosen.length && !net_chosen.length) {
+                show = false;
+            }
+
+            row.style.display = show ? 'table-row' : 'none';
+        });
+    }
+
+    document.getElementById('bin-search').addEventListener('input', function () {
+        filter(this.value);
     });
-}
-
-document.getElementById('bin-search').addEventListener('input', function () {
-    filter(this.value);
-});
 </script>
-
-</body>
-</html>
