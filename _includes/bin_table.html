@@ -12,7 +12,7 @@
 		{% for app in site.data.applications %}
 		<li>
 			<input type="checkbox" id="{{ app.label }}" name="app_name" onclick='handleChange(this, "{{ app.label }}");'>
-			<label id="{{ app.label }}_label" for="{{ app.label }}" data-title="{{ app.description | replace: '\n', ' ' }}">{{ app.label }}</label>
+			<label id="{{ app.label }}_label" for="{{ app.label }}">{{ app.label }}</label>
 		</li>
 		{% endfor %}
 		</ul>
@@ -22,7 +22,7 @@
 		{% for db in site.data.databases %}
 		<li>
 			<input type="checkbox" id="{{ db.label }}" name="db_name" onclick='handleChange(this, "{{ db.label }}");'>
-			<label id="{{ db.label }}_label" for="{{ db.label }}" data-title="{{ db.description | replace: '\n', ' ' }}">{{ db.label }}</label>
+			<label id="{{ db.label }}_label" for="{{ db.label }}">{{ db.label }}</label>
 		</li>
 		{% endfor %}
 		</ul>
@@ -32,7 +32,7 @@
 		{% for net in site.data.network %}
 		<li>
 			<input type="checkbox" id="{{ net.label }}" name="net_name" onclick='handleChange(this, "{{ net.label }}");'>
-			<label id="{{ net.label }}_label" for="{{ net.label }}" data-title="{{ net.description | replace: '\n', ' ' }}">{{ net.label }}</label>
+			<label id="{{ net.label }}_label" for="{{ net.label }}">{{ net.label }}</label>
 		</li>
 		{% endfor %}
 		</ul>
@@ -63,7 +63,6 @@
 							<a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
 						</div>
 					</div>
-					<p style="margin-top: -12px;">{% include filter_list.html bin=file %}</p>
 				</td>
 				</tr>
 				{% endfor %}
@@ -149,27 +148,16 @@
 			 var show = true;
 	
 			 var binName = row.children[0].firstElementChild.innerText.toLowerCase();
-			 
-			 var functionElems = Array.from(row.children[0].childNodes[2].children);
-		 
-			 if (show) {
-				 functionElems.forEach((item) => {
-					 item.className = '';
-				 });
-			 }
-			 
-			 var found_binName = false;
-			 if (binName.indexOf(binPattern) !== -1 && binPattern.length !== 0) {
-				 found_binName = true;
+	
+			 if (binName.indexOf(binPattern) === -1 && binPattern.length !== 0) {
+				 show = false;
 			 }
 	
-			 // Add your filter logic for apps, databases, and networks here...
-	
-			 if (!found_binName || !(app_chosen.length || db_chosen.length || net_chosen.length)) {
-				 row.style.display = 'none';
-			 } else {
-				 row.style.display = 'table-row';
+			 if (!app_chosen.length && !db_chosen.length && !net_chosen.length) {
+				 show = false;
 			 }
+	
+			 row.style.display = show ? 'table-row' : 'none';
 		 });
 	 }
 	

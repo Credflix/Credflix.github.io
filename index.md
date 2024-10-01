@@ -10,4 +10,4 @@ Find the project at [Credflix](https://credflix.github.io).
 
 This project was created by [Ant-ONE]
 
-{% include bin_table.html %}  # Cela inclut une table dynamique si tu choisis de l'ajouter
+{% include bin_table.html %}
