@@ -3,7 +3,7 @@
 [Build Status]: https://travis-ci.org/Credflix/Credflix.github.io.svg?branch=main
 [travis]: https://travis-ci.org/Credflix/Credflix.github.io
 
-Credflix is an interactive platform containing a curated list of default credentials for various devices, such as firewalls and CMSs.
+The ultimate repository for discovering default credentials across various platforms. Simplify your security assessments with our curated lists and enhance your penetration testing efforts.
 
 Find the project at https://Credflix.github.io
 
