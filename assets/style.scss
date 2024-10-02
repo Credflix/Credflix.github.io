@@ -4,17 +4,12 @@ $accent: #07bf07;
 $lighter: #f4fff4;
 $marked: #ccffcc;
 $hover: #00ff00;
-$dark: #292a2d;
-$darkText: #a9a9b3;
-$test: #ff0000;
-$greenColor: #07bf07;
 
 // layout
 
 $column-width: 800px;
 $grace-space: 200px;
 $layout-break: "(min-width: #{$column-width + $grace-space})";
-
 
 @media #{$layout-break} {
     body {
@@ -37,18 +32,18 @@ $layout-break: "(min-width: #{$column-width + $grace-space})";
 
 body {
     font-family: sans, sans-serif;
-    background: $dark;
-    color: $darkText;
+    background: $lighter; // Change background for consistency
 }
 
 code {
     padding: 0.15em 0.25em;
     border-radius: 0.25em;
-    color: $greenColor;
+    color: $accent; // Align with WADCom
+    background: $marked; // Add background for better visibility
 }
 
 pre {
-    background: $marked;
+    background: $lighter; // Align with WADCom
     padding: 1em;
     overflow-x: auto;
 
@@ -59,7 +54,7 @@ pre {
 }
 
 a:link, a:visited {
-    color: $greenColor;
+    color: $accent;
 }
 
 a:hover {
@@ -160,7 +155,7 @@ h2, h3, h4, h5, h5 {
     }
 
     tbody tr:hover {
-        background: #3b3b3b;
+        background: $marked; // Align with WADCom
     }
 
     #search-message {
@@ -189,7 +184,7 @@ h2, h3, h4, h5, h5 {
         }
 
         a:link, a:visited {
-            color: $greenColor;
+            color: $accent;
             text-decoration: none;
         }
 
@@ -208,7 +203,7 @@ h2, h3, h4, h5, h5 {
             margin: 0.2em 0;
             border: 1px solid $accent;
             background: $marked;
-            color: $greenColor;
+            color: $accent;
             text-decoration: none;
         }
 	
@@ -281,6 +276,7 @@ h2, h3, h4, h5, h5 {
         visibility: hidden;
     }
 }
+
 .switch {
     position: relative;
     display: inline-block;
@@ -288,54 +284,54 @@ h2, h3, h4, h5, h5 {
     height: 40px;
     margin-bottom: -10px;
     margin-left: 10px;
-  }
+}
   
-  .switch input {display:none;}
+.switch input {
+    display: none;
+}
   
-  .slider {
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
+    background-image: url(night.jpg); // Change default image to match WADCom
+    background-repeat: no-repeat;
     background-size: 100% 100%;
     transition: .4s;
-  }
+}
   
-  .slider:before {
+.slider:before {
     position: absolute;
     content: "";
     height: 26px;
     width: 26px;
     left: 4px;
     bottom: 4px;
-    -webkit-transition: .4s;
+    background-image: url(night.jpg); // Change default image to match WADCom
     transition: .4s;
-  }
+}
   
-  input:checked + .slider {
-    background-image: url(day.jpg);
+input:checked + .slider {
+    background-image: url(day.jpg); // Change to match WADCom behavior
     background-repeat: no-repeat;
     background-size: cover;
-  }
+}
   
-  input:focus + .slider {
+input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
-  }
+}
   
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
+input:checked + .slider:before {
     transform: translateX(26px);
-  }
-  .slider.round {
-    border-radius: 34px;
+}
 
-  }
+.slider.round {
+    border-radius: 34px;
+}
   
-  .slider.round:before {
+.slider.round:before {
     border-radius: 50%;
-  }
+}
