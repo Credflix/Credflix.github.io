@@ -161,13 +161,13 @@
             </tr>
         </thead>
         <tbody>
-            {% assign applications = site.data.applications %}
-            {% assign databases = site.data.databases %}
-            {% assign network = site.data.network %}
-            {% assign security = site.data.security %}
-            {% assign infrastructure = site.data.infrastructure %}
-            {% assign iot = site.data.iot %}
-            {% assign telecom = site.data.telecom %}
+            {% assign applications = site.data.applications | default: "" %}
+            {% assign databases = site.data.databases | default: "" %}
+            {% assign network = site.data.network | default: "" %}
+            {% assign security = site.data.security | default: "" %}
+            {% assign infrastructure = site.data.infrastructure | default: "" %}
+            {% assign iot = site.data.iot | default: "" %}
+            {% assign telecom = site.data.telecom | default: "" %}
 
             {% assign all_files = applications | concat: databases | concat: network | concat: security | concat: infrastructure | concat: iot | concat: telecom %}
 
@@ -196,7 +196,7 @@
             <tr>
                 <td id="search-message" colspan="2" style="text-align: center;">
                     Couldn't find the command you're looking for? 
-                    <a href="/contribute/">Contribute</a> your own!
+                    <strong><a href="https://github.com/Ant-ONE/Credflix/issues/new">Report it here</a></strong>.
                 </td>
             </tr>
         </tfoot>
@@ -204,42 +204,20 @@
 </div>
 
 <script>
-    function copyFunction(file_url) {
-        var copyCommand = document.getElementById(file_url);
-        navigator.clipboard.writeText(copyCommand.innerText).then(() => {
-            document.getElementById(file_url + "_img").alt = "Copied";
-            document.getElementById(file_url + "_img").title = "Copied";
-        }, () => {
-            console.log("copy failed");
-        });
-    }
-
-    function handleChange(checkbox, label) {
-        var sanitizedLabel = label.replace(/\s/g, '-');
-        if (checkbox.checked) {
-            document.getElementById(sanitizedLabel).className = 'selected';
-            document.getElementById(sanitizedLabel + "_label").innerText = label + " ✓";
-            if (window.location.href.includes("#")) {
-                window.location.href += '+' + sanitizedLabel;
+    const searchBox = document.getElementById('bin-search');
+    const binTable = document.getElementById('bin-table');
+    const binRows = binTable.getElementsByTagName('tr');
+    
+    searchBox.addEventListener('input', function() {
+        const searchTerm = searchBox.value.toLowerCase();
+        for (let i = 1; i < binRows.length; i++) { // Skip the header
+            const row = binRows[i];
+            const command = row.textContent.toLowerCase();
+            if (command.includes(searchTerm)) {
+                row.style.display = '';
             } else {
-                window.location.href += '#+' + sanitizedLabel;
+                row.style.display = 'none';
             }
-        } else {
-            document.getElementById(sanitizedLabel).className = "";
-            document.getElementById(sanitizedLabel + "_label").innerText = label;
-            window.location.href = window.location.href.replace("+" + sanitizedLabel, "");
         }
-    }
-
-    function filter(query) {
-        var query = query.toLowerCase();
-        var rows = document.querySelectorAll('#bin-table tbody tr');
-        rows.forEach(row => {
-            row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
-        });
-    }
-
-    document.getElementById('bin-search').addEventListener('input', function () {
-        filter(this.value);
     });
 </script>
