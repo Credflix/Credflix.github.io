@@ -1,2 +1,17 @@
+---
 title: Credflix
 description: A comprehensive resource for default credentials.
+exclude: ['/scripts', '/Gemfile', '/Makefile', '/README.md']
+
+permalink: pretty
+
+collections:
+  credflix:
+    output: true
+
+defaults:
+  - scope:
+      path: '_credflix'
+    values:
+      layout: bin
+---
