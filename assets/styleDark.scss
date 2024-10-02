@@ -67,7 +67,7 @@ input[type=checkbox] {
 }
 
 // Permalink on Headings
-h2, h3, h4, h5, h5 {
+h2, h3, h4, h5 {
     .permalink {
         margin-left: 5px;
         text-decoration: none;
@@ -101,7 +101,7 @@ h2, h3, h4, h5, h5 {
 
     #bin-search-filters {
         text-align: center;
-	
+
         input[type=checkbox] + label {
             background: $marked;
             font-size: initial;
@@ -204,7 +204,7 @@ h2, h3, h4, h5, h5 {
             color: $greenColor;
             text-decoration: none;
         }
-	
+
         input[type=checkbox]:hover + label {
             color: $hover;
             border-color: $hover;
@@ -267,7 +267,7 @@ h2, h3, h4, h5, h5 {
     display: inline-block;
     margin-left: 10px;
 
-    // avoid displaying the link text during loading
+    // Avoid displaying the link text during loading
     a.github-button {
         visibility: hidden;
     }
@@ -282,11 +282,11 @@ h2, h3, h4, h5, h5 {
     margin-bottom: -10px;
     margin-left: 10px;
 }
-  
+
 .switch input {
     display: none;
 }
-  
+
 .slider {
     position: absolute;
     cursor: pointer;
@@ -296,10 +296,9 @@ h2, h3, h4, h5, h5 {
     bottom: 0;
     background-color: #ccc;
     -webkit-transition: .4s;
-    background-size: 100% 100%;
     transition: .4s;
 }
-  
+
 .slider:before {
     position: absolute;
     content: "";
@@ -310,17 +309,17 @@ h2, h3, h4, h5, h5 {
     -webkit-transition: .4s;
     transition: .4s;
 }
-  
+
 input:checked + .slider {
     background-image: url(day.jpg);
     background-repeat: no-repeat;
     background-size: cover;
 }
-  
+
 input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
 }
-  
+
 input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
@@ -330,7 +329,7 @@ input:checked + .slider:before {
 .slider.round {
     border-radius: 34px;
 }
-  
+
 .slider.round:before {
     border-radius: 50%;
 }

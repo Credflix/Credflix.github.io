@@ -1,79 +1,334 @@
 // Variables
-$primary-color: #007acc; // Couleur principale (comme WADComs)
-$secondary-color: #f5f5f5; // Couleur de fond
-$text-color: #333; // Couleur du texte
-$header-bg: #ffffff; // Couleur d'arrière-plan de l'en-tête
-$link-color: $primary-color;
 
-// Styles généraux
+$accent: #07bf07;
+$lighter: #f4fff4;
+$marked: #ccffcc;
+$hover: #00ff00;
+
+// Layout
+
+$column-width: 800px;
+$grace-space: 200px;
+$layout-break: "(min-width: #{$column-width + $grace-space})";
+
+@media #{$layout-break} {
+    body {
+        width: $column-width;
+        margin: 40px auto;
+    }
+
+    p {
+        text-align: justify;
+    }
+}
+
+@media not all and #{$layout-break} {
+    .github-corner {
+        display: none;
+    }
+}
+
+// Common tags
+
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: $secondary-color;
-  color: $text-color;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
+    font-family: sans, sans-serif;
 }
 
-h1, h2, h3 {
-  color: $primary-color;
+code {
+    padding: 0.15em 0.25em;
+    border-radius: 0.25em;
+    color: $accent;
+    background: $lighter;
 }
 
-a {
-  color: $link-color;
-  text-decoration: none;
-  
-  &:hover {
-    text-decoration: underline;
-  }
+pre {
+    background: $lighter;
+    padding: 1em;
+    overflow-x: auto;
+
+    code {
+        padding: 0;
+        border-radius: 0;
+    }
 }
 
-// En-tête
-header {
-  background-color: $header-bg;
-  padding: 20px;
-  text-align: center;
+a:link,
+a:visited {
+    color: $accent;
+}
 
-  h1 {
+a:hover {
+    color: $hover;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+// Permalink on headings
+
+h2, h3, h4, h5 {
+    .permalink {
+        margin-left: 5px;
+        text-decoration: none;
+        visibility: hidden;
+
+        &::before {
+            content: "#";
+        }
+    }
+
+    &:target {
+        border-left: 5px solid $accent;
+        padding-left: 5px;
+    }
+
+    &:hover {
+        .permalink {
+            visibility: visible;
+        }
+    }
+}
+
+// Binary list and search
+
+#bin-search-wrapper {
+    margin: 20px 0;
+    padding: 10px 0;
+    position: relative; // XXX needed for tooltip sizing
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-row: auto auto;
+
+    #bin-search-filters {
+        text-align: center;
+
+        input[type="checkbox"] + label {
+            background: $lighter;
+            font-size: initial;
+            border-radius: 0.25em;
+            cursor: pointer;
+
+            &:hover:before {
+                content: attr(data-title);
+                font-size: 0.8rem;
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin-top: 1.75rem; // XXX below the button
+                margin-left: 10%;
+                margin-right: 10%;
+                padding: 1em;
+                border-radius: 1em;
+                color: $lighter;
+                background: rgba(0, 0, 0, 0.75);
+                z-index: 1;
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+#bin-search {
+    margin: 20px 0;
+    padding: 10px 0;
+    position: relative; // XXX needed for tooltip sizing
+    margin-top: 25px;
+    padding: 1em;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid $accent;
+    outline-color: $accent;
+}
+
+#bin-table {
+    width: 100%;
+
+    th,
+    td {
+        padding: 0.2em 1em;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    tbody tr:hover {
+        background: $lighter;
+    }
+
+    #search-message {
+        display: table-cell;
+        text-align: center;
+        padding: 1em;
+    }
+}
+
+// Filter description
+
+.filter-list {
+    font-size: 0.8rem;
+    list-style: none;
+    padding: 0;
     margin: 0;
-  }
+
+    li {
+        display: inline-block;
+
+        a {
+            display: inline-block;
+            padding: 0.25em 0.5em;
+            margin: 0.2em 0;
+            border: 1px solid $accent;
+
+            &:link,
+            &:visited {
+                color: $accent;
+                text-decoration: none;
+            }
+
+            &:hover {
+                color: $hover;
+                border-color: $hover;
+            }
+        }
+
+        &.match a {
+            background: $marked;
+        }
+
+        input[type="checkbox"] + label {
+            display: inline-block;
+            padding: 0.25em 0.5em;
+            margin: 0.2em 0;
+            border: 1px solid $accent;
+            color: $accent;
+            text-decoration: none;
+
+            &:hover {
+                color: $hover;
+                border-color: $hover;
+            }
+        }
+
+        &.match input[type="checkbox"] + label {
+            background: $marked;
+        }
+    }
 }
 
-// Contenu principal
-.main-content {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+// Bin examples
+
+.examples {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    counter-reset: item;
+    margin: 0;
+    padding: 0;
+
+    li {
+        display: table-row;
+
+        &:not(:only-child):before {
+            display: table-cell;
+            font-size: 0.8rem;
+            font-weight: bold;
+            width: 3em;
+            text-align: center;
+            counter-increment: item;
+        }
+    }
 }
 
-// Sections
-.section {
-  margin-bottom: 20px;
-  padding: 15px;
-  border-radius: 5px;
-  background-color: lighten($secondary-color, 10%);
-  
-  h2 {
-    margin-top: 0;
-  }
+// Other classes
+
+.logo {
+    $margin: 20px;
+    float: right;
+    width: 100px;
+    height: 100px;
+    margin-left: $margin;
+    margin-bottom: $margin;
 }
 
-// Listes
-ul {
-  list-style-type: disc;
-  padding-left: 20px;
-
-  li {
-    margin-bottom: 10px;
-  }
+.bin-name {
+    display: flex;
+    font-family: monospace;
+    font-size: 1.0rem;
+    padding: 0.75em 1.0em;
+    border-radius: 0.25em;
+    background: $marked;
 }
 
-// Footer
-footer {
-  text-align: center;
-  padding: 20px;
-  background-color: $header-bg;
-  color: $text-color;
+.filter-name {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.github-buttons {
+    display: inline-block;
+    margin-left: 10px;
+
+    // Avoid displaying the link text during loading
+    a.github-button {
+        visibility: hidden;
+    }
+}
+
+// Switch button for dark/light mode
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 40px;
+    margin-bottom: -10px;
+    margin-left: 10px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(night.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-image: url(night.jpg);
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-image: url(day.jpg);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
