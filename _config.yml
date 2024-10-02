@@ -1,6 +1,6 @@
----
 title: Credflix
 description: A comprehensive resource for default credentials.
+
 exclude: ['/scripts', '/Gemfile', '/Makefile', '/README.md']
 
 permalink: pretty
@@ -14,4 +14,6 @@ defaults:
       path: '_credflix'
     values:
       layout: bin
----
+
+sass:
+  sass_dir: assets
