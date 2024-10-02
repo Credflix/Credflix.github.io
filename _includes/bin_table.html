@@ -10,10 +10,12 @@
         height: 100vh;
         background-color: #f0f0f0;
     }
+
     h1 {
         text-align: center;
         margin-bottom: 20px;
     }
+
     #bin-search-wrapper {
         display: flex;
         flex-direction: column;
@@ -22,20 +24,24 @@
         width: 80%;
         max-width: 600px;
     }
+
     .filter-list {
         margin: 10px 0;
         list-style-type: none;
         padding: 0;
     }
+
     .filter-list h3 {
         margin: 10px 0;
     }
+
     #bin-search {
         margin: 10px 0;
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
     }
+
     #bin-table-wrapper {
         width: 80%;
         max-width: 600px;
@@ -44,20 +50,26 @@
         border-radius: 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
+
     table {
         width: 100%;
         border-collapse: collapse;
     }
-    th, td {
+
+    th,
+    td {
         padding: 10px;
         text-align: left;
     }
+
     th {
         background-color: #f4f4f4;
     }
+
     tr:nth-child(even) {
         background-color: #f9f9f9;
     }
+
     .selected {
         color: #ff0000 !important;
         border-color: #ff0000 !important;
@@ -77,7 +89,7 @@
             <input type="checkbox" id="{{ net.label | slugify }}" name="net_name" 
                    onclick='handleChange(this, "{{ net.label }}");'>
             <label id="{{ net.label | slugify }}_label" 
-                   for="{{ net.label | slugify }}">{{ net.label }}</label>
+                   for="{{ net.label | slugify }}" data-title="{{ net.description | replace: '\n', ' ' }}">{{ net.label }}</label>
         </li>
         {% endfor %}
     </ul>
@@ -89,7 +101,7 @@
             <input type="checkbox" id="{{ app.label | slugify }}" name="app_name" 
                    onclick='handleChange(this, "{{ app.label }}");'>
             <label id="{{ app.label | slugify }}_label" 
-                   for="{{ app.label | slugify }}">{{ app.label }}</label>
+                   for="{{ app.label | slugify }}" data-title="{{ app.description | replace: '\n', ' ' }}">{{ app.label }}</label>
         </li>
         {% endfor %}
     </ul>
@@ -101,7 +113,7 @@
             <input type="checkbox" id="{{ sec.label | slugify }}" name="sec_name" 
                    onclick='handleChange(this, "{{ sec.label }}");'>
             <label id="{{ sec.label | slugify }}_label" 
-                   for="{{ sec.label | slugify }}">{{ sec.label }}</label>
+                   for="{{ sec.label | slugify }}" data-title="{{ sec.description | replace: '\n', ' ' }}">{{ sec.label }}</label>
         </li>
         {% endfor %}
     </ul>
@@ -113,7 +125,7 @@
             <input type="checkbox" id="{{ infra.label | slugify }}" name="infra_name" 
                    onclick='handleChange(this, "{{ infra.label }}");'>
             <label id="{{ infra.label | slugify }}_label" 
-                   for="{{ infra.label | slugify }}">{{ infra.label }}</label>
+                   for="{{ infra.label | slugify }}" data-title="{{ infra.description | replace: '\n', ' ' }}">{{ infra.label }}</label>
         </li>
         {% endfor %}
     </ul>
@@ -125,7 +137,7 @@
             <input type="checkbox" id="{{ iot.label | slugify }}" name="iot_name" 
                    onclick='handleChange(this, "{{ iot.label }}");'>
             <label id="{{ iot.label | slugify }}_label" 
-                   for="{{ iot.label | slugify }}">{{ iot.label }}</label>
+                   for="{{ iot.label | slugify }}" data-title="{{ iot.description | replace: '\n', ' ' }}">{{ iot.label }}</label>
         </li>
         {% endfor %}
     </ul>
@@ -137,7 +149,7 @@
             <input type="checkbox" id="{{ tel.label | slugify }}" name="tel_name" 
                    onclick='handleChange(this, "{{ tel.label }}");'>
             <label id="{{ tel.label | slugify }}_label" 
-                   for="{{ tel.label | slugify }}">{{ tel.label }}</label>
+                   for="{{ tel.label | slugify }}" data-title="{{ tel.description | replace: '\n', ' ' }}">{{ tel.label }}</label>
         </li>
         {% endfor %}
     </ul>
@@ -202,17 +214,11 @@
     const searchBox = document.getElementById('bin-search');
     const binTable = document.getElementById('bin-table');
     const binRows = binTable.getElementsByTagName('tr');
-    
+
     searchBox.addEventListener('input', function() {
         const searchTerm = searchBox.value.toLowerCase();
         for (let i = 1; i < binRows.length; i++) { // Skip the header
             const row = binRows[i];
             const command = row.textContent.toLowerCase();
             if (command.includes(searchTerm)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        }
-    });
-</script>
+               
