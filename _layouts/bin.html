@@ -1,42 +1,170 @@
----
-layout: common
----
-
-{% capture bin_name %}{% include get_bin_name path=page.path %}{% endcapture %}
-
-{% include page_title.html title=bin_name %}
-
-{% include filter_list.html bin=page %}
-
-{{ page.description | markdownify }}
-
-Command:
-<a href="javascript:void(0)" onClick="copyFunction_com()" style="float: right; margin-bottom: -10px;"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="code_img"/></a>
-<ul class="examples">
-    <li>
-	<pre><code id="code_text">{{ page.command | escape }}</code></pre>
-    </li>
-
-</ul>
-
-References:
-<br>
-<br>
-{% for reference in page.references %}
-<a href="{{ reference }}">{{ reference }}</a>
-<br>
-<br>
-{% endfor %}
-<script>
-
-function copyFunction_com() {
-	 var copyCommand = document.getElementById("code_text");
-
-	 navigator.clipboard.writeText(copyCommand.innerText.replace(/\n+$/, "")).then(() => {
-		 document.getElementById("code_img").alt = "Copied";
-		 document.getElementById("code_img").title = "Copied";
-	 }, () => {
-		 console.log("copy failed");
-	 });
-}
-</script>
+<style>
+	.selected {
+		color: #ff0000 !important;
+		border-color: #ff0000 !important;
+	}
+	</style>
+	
+	<div id="credflix-search-wrapper">
+		<ul id="credflix-search-filters" class="filter-list">
+			<h3>Categories:</h3>
+			{% for category_pair in site.data %}
+			{% assign category_id = category_pair[0] %}
+			{% assign category = category_pair[1] %}
+			<li>
+				<input type="checkbox" id="{{ category_id }}" name="category_name" onclick='handleChange(this, "{{ category.label }}");'>
+				<label id="{{ category.label }}_label" for="{{ category.label }}" data-title="{{ category.description | replace: '\n', ' ' }}">
+					{{ category.label }}
+				</label>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	
+	<div style="margin-top: -20px;">
+		<input id="credflix-search" type="text" placeholder="Search among {{ site.credflix | size }} entries: <category> +<filter> ..."/>
+	</div>
+	
+	<div id="credflix-table-wrapper">
+		<table id="credflix-table">
+			<thead>
+				<tr>
+					<th>Label</th>
+					<th>Description</th>
+					<th>Default Credentials</th>
+					<th>References</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% assign entries = site.credflix %}
+				{% for entry in entries %}
+				<tr>
+					<td>{{ entry.label }}</td>
+					<td>{{ entry.description }}</td>
+					<td>
+						<ul>
+							{% for credential in entry.default_credentials %}
+							<li>Username: {{ credential.Username }} / Password: {{ credential.Password }}</li>
+							{% endfor %}
+						</ul>
+					</td>
+					<td>
+						<ul>
+							{% for reference in entry.references %}
+							<li><a href="{{ reference }}">{{ reference }}</a></li>
+							{% endfor %}
+						</ul>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+	<script>
+	function copyFunction(file_url) {
+		var copyCommand = document.getElementById(file_url);
+	
+		navigator.clipboard.writeText(copyCommand.innerText).then(() => {
+			{% for entry in site.credflix %}
+			document.getElementById("{{ entry.url }}_img").alt = "Copy";
+			document.getElementById("{{ entry.url }}_img").title = "Copy";
+			{% endfor %}
+			document.getElementById(file_url + "_img").alt = "Copied";
+			document.getElementById(file_url + "_img").title = "Copied";
+		}, () => {
+			console.log("copy failed");
+		});
+	}
+	
+	function handleChange(checkbox, label) {
+		if (checkbox.checked == true) {
+			document.getElementById(label).className = 'match';
+			document.getElementById(label + "_label").innerText = label + "✓";
+			var slash = window.location.href.lastIndexOf("/");
+			if (window.location.href[slash + 1] == "#") {
+				window.location.href += '+' + label;
+			} else {
+				window.location.href += '#+' + label;
+			}
+		} else {
+			document.getElementById(label).className = "";
+			document.getElementById(label + "_label").innerText = label;
+			label = label.replace(" ", "%20");
+			var new_href = window.location.href.replace("+" + label, "");
+			window.location.href = new_href;
+			if (window.location.hash == "") {
+				document.getElementById("credflix-search").value = "";
+			}
+		}
+	}
+	
+	function filter(query) {
+		var queryArray = query.toLowerCase().trim().split(/ *\+/);
+		var categoryPattern = queryArray[0];
+		var functionPatterns = queryArray.splice(1);
+		var noResults = true;
+	
+		document.querySelectorAll('#credflix-table tbody tr').forEach(function (row) {
+			var show = true;
+			var categoryName = row.children[0].firstElementChild.innerText.toLowerCase();
+			var functionElems = Array.from(row.children[0].childNodes[2].children);
+	
+			if (categoryName.indexOf(categoryPattern) !== -1 && categoryPattern.length !== 0) {
+				functionElems.forEach((item) => {
+					item.className = '';
+				});
+				functionElems.forEach((item) => {
+					if (functionPatterns.includes(item.innerText.toLowerCase())) {
+						item.className = 'match';
+					}
+				});
+			} else {
+				row.style.display = 'none';
+			}
+	
+			if (functionPatterns.length == 0 && categoryPattern.length == 0) {
+				row.style.display = '';
+				noResults = false;
+			}
+		});
+	}
+	
+	function applyFilter() {
+		var searchBox = document.getElementById('credflix-search');
+		var query = decodeURIComponent(location.hash.slice(1));
+		filter(query);
+		if (query) {
+			searchBox.value = query;
+		}
+	}
+	
+	function setup() {
+		var searchBox = document.getElementById('credflix-search');
+		var credflixTableWrapper = document.getElementById('credflix-table-wrapper');
+		credflixTableWrapper.style.height = credflixTableWrapper.clientHeight + 'px';
+	
+		searchBox.addEventListener('input', function () {
+			var query = searchBox.value;
+			history.replaceState(null, null, encodeURI('#' + query));
+			applyFilter();
+		});
+	
+		addEventListener('keydown', function (event) {
+			if (event.key.toLowerCase().match(/^[+a-z]$/) && !(event.ctrlKey || event.altKey || event.metaKey)) {
+				searchBox.focus();
+				searchBox.parentElement.scrollIntoView();
+			} else if (event.key === 'Escape') {
+				location.hash = searchBox.value = '';
+				searchBox.focus();
+				searchBox.parentElement.scrollIntoView();
+			}
+		});
+	
+		window.onhashchange = applyFilter;
+		applyFilter();
+	}
+	
+	setup();
+	</script>
+	

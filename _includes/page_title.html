@@ -5,5 +5,26 @@
     {{ include.title }}
     <div class="github-buttons">
         <a class="github-button" href="https://github.com/Credflix/Credflix.github.io" data-icon="octicon-star" data-show-count="true" aria-label="Star Credflix/Credflix.github.io on GitHub">Star</a>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider round"></span>
+        </label>
+        <script type="text/javascript">
+            // Vérifie si le style sombre est enregistré dans localStorage
+            if(localStorage["style"]=="true"){
+                document.getElementById('pagestyle').setAttribute('href','/assets/styleDark.css');
+                document.querySelector('input[type="checkbox"]').checked = true;
+            }
+            // Ajoute un écouteur d'événements pour changer le style
+            document.getElementById('theme-toggle').addEventListener('change', function() {
+                if(this.checked) {
+                    document.getElementById('pagestyle').setAttribute('href','/assets/styleDark.css');
+                    localStorage["style"] = "true";
+                } else {
+                    document.getElementById('pagestyle').setAttribute('href','/assets/style.css');
+                    localStorage["style"] = "false";
+                }
+            });
+        </script>
     </div>
 </h1>

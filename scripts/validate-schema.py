@@ -10,6 +10,7 @@ def parse_yaml(path):
         return yaml.load_all(text, Loader=yaml.SafeLoader)
 
 def build_schema():
+    # Récupération des noms des clés de chaque fichier YAML
     network_names = next(parse_yaml('_data/Networking_Equipments.yml')).keys()
     security_names = next(parse_yaml('_data/Security_Devices.yml')).keys()
     infrastructure_names = next(parse_yaml('_data/IT_Infrastructures.yml')).keys()
