@@ -144,7 +144,7 @@
 </div>
 
 <div style="margin-top: -20px; text-align: center;">
-    <input id="bin-search" type="text" placeholder="Search among {{ site.data.applications | size | plus: site.data.databases | size | plus: site.data.network | size }} commands: <command> +<filter> ..."/>
+    <input id="bin-search" type="text" placeholder="Search among all commands..."/>
 </div>
 
 <div id="bin-table-wrapper">
@@ -155,15 +155,12 @@
             </tr>
         </thead>
         <tbody>
-            {% assign applications = site.data.applications | default: "" %}
-            {% assign databases = site.data.databases | default: "" %}
-            {% assign network = site.data.network | default: "" %}
-            {% assign security = site.data.security | default: "" %}
-            {% assign infrastructure = site.data.infrastructure | default: "" %}
-            {% assign iot = site.data.iot | default: "" %}
-            {% assign telecom = site.data.telecom | default: "" %}
-
-            {% assign all_files = applications | concat: databases | concat: network | concat: security | concat: infrastructure | concat: iot | concat: telecom %}
+            {% assign all_files = site.data.applications %}
+            {% assign all_files = site.data.network %}
+            {% assign all_files = site.data.security %}
+            {% assign all_files = site.data.infrastructure %}
+            {% assign all_files = site.data.iot %}
+            {% assign all_files = site.data.telecom %}
 
             {% if all_files.size == 0 %}
                 <tr>
@@ -219,20 +216,16 @@
     function copyFunction(file_url) {
         var copyCommand = document.getElementById(file_url);
         navigator.clipboard.writeText(copyCommand.innerText).then(() => {
-            {% for file in all_files %}
-            document.getElementById("{{ file.url }}_img").alt = "Copy";
-            document.getElementById("{{ file.url }}_img").title = "Copy";
-            {% endfor %}
-            alert("Command copied to clipboard!");
+            alert("Copied the command: " + copyCommand.innerText);
         });
     }
 
-    function handleChange(element, name) {
-        const label = document.getElementById(name | slugify + '_label');
-        if (element.checked) {
-            label.classList.add('selected');
+    function handleChange(checkbox, label) {
+        const labelElement = document.getElementById(label | slugify | append: "_label");
+        if (checkbox.checked) {
+            labelElement.classList.add('selected');
         } else {
-            label.classList.remove('selected');
+            labelElement.classList.remove('selected');
         }
     }
 </script>
