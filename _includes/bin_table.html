@@ -157,7 +157,7 @@
     <table id="bin-table">
         <thead>
             <tr>
-                <th>Command</th>
+                <th>Resource</th>
             </tr>
         </thead>
         <tbody>
@@ -167,7 +167,7 @@
                 <td>
                     <div class="bin-name">
                         <div style="flex: 0 0 97%">
-                            <a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.command | escape }}</a>
+                            <a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.label | escape }}</a>
                         </div>
                         <div style="flex: 1;">
                             <a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
@@ -190,39 +190,13 @@
 
 <script>
     function copyFunction(file_url) {
-        var copyCommand = document.getElementById(file_url);
-        navigator.clipboard.writeText(copyCommand.innerText).then(() => {
-            document.getElementById(file_url + "_img").alt = "Copied";
-            document.getElementById(file_url + "_img").title = "Copied";
-        }, () => {
-            console.log("copy failed");
-        });
+        var copyCommand = document.getElementById(file_url).textContent;
+        navigator.clipboard.writeText(copyCommand)
+            .then(() => {
+                alert('Command copied: ' + copyCommand);
+            })
+            .catch(err => {
+                alert('Error in copying command: ', err);
+            });
     }
-
-    function handleChange(checkbox, label) {
-        var sanitizedLabel = label.replace(/\s/g, '-');
-        if (checkbox.checked) {
-            document.getElementById(sanitizedLabel).className = 'selected';
-            document.getElementById(sanitizedLabel + "_label").innerText = label + " ✓";
-            if (window.location.href.includes("#")) {
-                window.location.href += '+' + sanitizedLabel;
-            } else {
-                window.location.href += '#+' + sanitizedLabel;
-            }
-        } else {
-            document.getElementById(sanitizedLabel).className = "";
-            document.getElementById(sanitizedLabel + "_label").innerText = label;
-            window.location.href = window.location.href.replace("+" + sanitizedLabel, "");
-        }
-    }
-
-    function filter(query) {
-        var queryArray = query.toLowerCase().trim().split(/ *\+/);
-        var binPattern = queryArray[0];
-        var functionPatterns = queryArray.splice(1);
-
-        var allApps = document.getElementsByName("app_name");
-        var allDatabases = document.getElementsByName("database_name");
-        var allNetworks = document.getElementsByName("net_name");
-        var allSecurity = document.getElementsByName("sec_name");
-       
+</script>
