@@ -157,25 +157,40 @@
     <table id="bin-table">
         <thead>
             <tr>
-                <th>Resource</th>
+                <th>Command</th>
             </tr>
         </thead>
         <tbody>
-            {% assign all_files = site.data.applications | concat: site.data.databases | concat: site.data.network | concat: site.data.security | concat: site.data.infrastructure | concat: site.data.iot | concat: site.data.telecom %}
-            {% for file in all_files %}
-            <tr>
-                <td>
-                    <div class="bin-name">
-                        <div style="flex: 0 0 97%">
-                            <a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.label | escape }}</a>
+            {% assign applications = site.data.applications %}
+            {% assign databases = site.data.databases %}
+            {% assign network = site.data.network %}
+            {% assign security = site.data.security %}
+            {% assign infrastructure = site.data.infrastructure %}
+            {% assign iot = site.data.iot %}
+            {% assign telecom = site.data.telecom %}
+
+            {% assign all_files = applications | concat: databases | concat: network | concat: security | concat: infrastructure | concat: iot | concat: telecom %}
+
+            {% if all_files.size == 0 %}
+                <tr>
+                    <td colspan="1" style="text-align: center;">No credentials found.</td>
+                </tr>
+            {% else %}
+                {% for file in all_files %}
+                <tr>
+                    <td>
+                        <div class="bin-name">
+                            <div style="flex: 0 0 97%">
+                                <a href="{{ file.url }}" id="{{ file.url }}" style="text-decoration: none; color: DarkGreen;">{{ file.label | escape }}</a>
+                            </div>
+                            <div style="flex: 1;">
+                                <a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
+                            </div>
                         </div>
-                        <div style="flex: 1;">
-                            <a href="javascript:void(0)" onClick="copyFunction('{{ file.url }}')"><img src="/assets/copy-button.svg" alt="Copy" title="Copy" id="{{ file.url }}_img"/></a>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
         <tfoot>
             <tr>
@@ -190,13 +205,41 @@
 
 <script>
     function copyFunction(file_url) {
-        var copyCommand = document.getElementById(file_url).textContent;
-        navigator.clipboard.writeText(copyCommand)
-            .then(() => {
-                alert('Command copied: ' + copyCommand);
-            })
-            .catch(err => {
-                alert('Error in copying command: ', err);
-            });
+        var copyCommand = document.getElementById(file_url);
+        navigator.clipboard.writeText(copyCommand.innerText).then(() => {
+            document.getElementById(file_url + "_img").alt = "Copied";
+            document.getElementById(file_url + "_img").title = "Copied";
+        }, () => {
+            console.log("copy failed");
+        });
     }
+
+    function handleChange(checkbox, label) {
+        var sanitizedLabel = label.replace(/\s/g, '-');
+        if (checkbox.checked) {
+            document.getElementById(sanitizedLabel).className = 'selected';
+            document.getElementById(sanitizedLabel + "_label").innerText = label + " ✓";
+            if (window.location.href.includes("#")) {
+                window.location.href += '+' + sanitizedLabel;
+            } else {
+                window.location.href += '#+' + sanitizedLabel;
+            }
+        } else {
+            document.getElementById(sanitizedLabel).className = "";
+            document.getElementById(sanitizedLabel + "_label").innerText = label;
+            window.location.href = window.location.href.replace("+" + sanitizedLabel, "");
+        }
+    }
+
+    function filter(query) {
+        var query = query.toLowerCase();
+        var rows = document.querySelectorAll('#bin-table tbody tr');
+        rows.forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+        });
+    }
+
+    document.getElementById('bin-search').addEventListener('input', function () {
+        filter(this.value);
+    });
 </script>
